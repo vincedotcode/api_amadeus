@@ -1,0 +1,26 @@
+{
+  "name": "amadeus-api-gotreep",
+  "version": "1.0.0",
+  "description": "Amedeus API built for Gotreep",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zapproach",
+  "license": "ISC",
+  "dependencies": {
+    "amadeus": "^8.0.0",
+    "axios": "^1.3.4",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "countries-list": "^2.6.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.1",
+    "nodemon": "^2.0.22",
+    "qs": "^6.11.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.2"
+  }
+}
