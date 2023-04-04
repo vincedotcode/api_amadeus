@@ -41,5 +41,5 @@ app.get('/flights', searchFlights);
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Amadeus API controller listening at http://localhost:${port}`);
+  console.log(`gpotreep API controller listening at http://localhost:${port}`);
 });
