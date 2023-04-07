@@ -82,6 +82,33 @@ const searchFlights = async (req, res) => {
       });
   
       const data = JSON.parse(response.body);
+
+      let cheapestFlight = data.data[0];
+      let fastestFlight = data.data[0];
+  
+      data.data.forEach((flight) => {
+        if (parseFloat(flight.price.total) < parseFloat(cheapestFlight.price.total)) {
+          cheapestFlight = flight;
+        }
+  
+        const flightDuration = flight.itineraries[0].duration;
+        const fastestFlightDuration = fastestFlight.itineraries[0].duration;
+  
+        if (flightDuration < fastestFlightDuration) {
+          fastestFlight = flight;
+        }
+      });
+  
+      // Add offer-type to each flight offer
+      data.data.forEach((flight) => {
+        if (flight === cheapestFlight) {
+          flight["offer-type"] = "Cheapest";
+        } else if (flight === fastestFlight) {
+          flight["offer-type"] = "Fastest";
+        } else {
+          flight["offer-type"] = "normal";
+        }
+      });
       const airlineCodes = Array.from(
         new Set(
           data.data.flatMap((offer) =>
@@ -96,7 +123,7 @@ const searchFlights = async (req, res) => {
       const airlineLogoUrls = await Promise.all(
         airlineCodes.map(async (code) => {
           const logoResponse = await fetch(
-            `https://content.airhex.com/content/logos/airlines_${code}_100_100_s.png?apikey=${process.env.YOUR_API_KEY}`
+            `https://content.airhex.com/content/logos/airlines_${code}_50_50_s.png?apikey=${process.env.YOUR_API_KEY}`
           );
           return { code, logoUrl: logoResponse.url };
         })
