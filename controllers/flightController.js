@@ -19,11 +19,11 @@ const amadeus = require("../amadeusClient");
  *         required: true
  *         description: Departure date (YYYY-MM-DD)
  *       - in: query
- *         name: arrival
+ *         name: return
  *         schema:
  *           type: string
- *         required: true
- *         description: Arrival date (YYYY-MM-DD)
+ *         required: false
+ *         description: Return date (YYYY-MM-DD)
  *       - in: query
  *         name: locationDeparture
  *         schema:
@@ -72,11 +72,13 @@ const searchFlights = async (req, res) => {
     console.log("Query:", query);
   // Convert the date string to the required format
   const departureDate = new Date(query.departure).toISOString().substring(0, 10);
+  const returnDate = query.return ? new Date(query.return).toISOString().substring(0, 10) : null;
     try {
       const response = await amadeus.shopping.flightOffersSearch.get({
         originLocationCode: query.locationDeparture,
         destinationLocationCode: query.locationArrival,
         departureDate: departureDate,
+        returnDate: returnDate,
         adults: query.adults,
         nonStop: query.nonStop,
       });
