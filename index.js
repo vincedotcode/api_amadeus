@@ -8,7 +8,7 @@ const cors = require("cors");
 
 
 const app = express();
-const allowedOrigins = ['http://localhost:3000', 'https://amadeus-api-6a8h.onrender.com'];
+const allowedOrigins = ['http://localhost:3000', 'https://amadeus-api-6a8h.onrender.com', 'https://gotreep.netlify.app'];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
