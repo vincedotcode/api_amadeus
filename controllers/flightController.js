@@ -62,88 +62,88 @@ const amadeus = require("../amadeusClient");
  */
 
 const getCountryName = (code) => {
-    const country = countriesList.countries[code];
-    return country ? country.name : code;
-  };
+  const country = countriesList.countries[code];
+  return country ? country.name : code;
+};
 
 const searchFlights = async (req, res) => {
-    const { query } = req;
-  
-    console.log("Query:", query);
+  const { query } = req;
+
+  console.log("Query:", query);
   // Convert the date string to the required format
   const departureDate = new Date(query.departure).toISOString().substring(0, 10);
   const returnDate = query.return ? new Date(query.return).toISOString().substring(0, 10) : null;
-    try {
-      const response = await amadeus.shopping.flightOffersSearch.get({
-        originLocationCode: query.locationDeparture,
-        destinationLocationCode: query.locationArrival,
-        departureDate: departureDate,
-        returnDate: returnDate,
-        adults: query.adults,
-        nonStop: query.nonStop,
-      });
-  
-      const data = JSON.parse(response.body);
+  try {
+    const response = await amadeus.shopping.flightOffersSearch.get({
+      originLocationCode: query.locationDeparture,
+      destinationLocationCode: query.locationArrival,
+      departureDate: departureDate,
+      returnDate: returnDate !== null ? returnDate : undefined,
+      adults: query.adults,
+      nonStop: query.nonStop,
+    });
 
-      let cheapestFlight = data.data[0];
-      let fastestFlight = data.data[0];
-  
-      data.data.forEach((flight) => {
-        if (parseFloat(flight.price.total) < parseFloat(cheapestFlight.price.total)) {
-          cheapestFlight = flight;
-        }
-  
-        const flightDuration = flight.itineraries[0].duration;
-        const fastestFlightDuration = fastestFlight.itineraries[0].duration;
-  
-        if (flightDuration < fastestFlightDuration) {
-          fastestFlight = flight;
-        }
-      });
-  
-      // Add offer-type to each flight offer
-      data.data.forEach((flight) => {
-        if (flight === cheapestFlight) {
-          flight["offer-type"] = "Cheapest";
-        } else if (flight === fastestFlight) {
-          flight["offer-type"] = "Fastest";
-        } else {
-          flight["offer-type"] = "normal";
-        }
-      });
-      const airlineCodes = Array.from(
-        new Set(
-          data.data.flatMap((offer) =>
-            offer.itineraries.flatMap((itinerary) =>
-              itinerary.segments.map((segment) => segment.carrierCode)
-            )
+    const data = JSON.parse(response.body);
+
+    let cheapestFlight = data.data[0];
+    let fastestFlight = data.data[0];
+
+    data.data.forEach((flight) => {
+      if (parseFloat(flight.price.total) < parseFloat(cheapestFlight.price.total)) {
+        cheapestFlight = flight;
+      }
+
+      const flightDuration = flight.itineraries[0].duration;
+      const fastestFlightDuration = fastestFlight.itineraries[0].duration;
+
+      if (flightDuration < fastestFlightDuration) {
+        fastestFlight = flight;
+      }
+    });
+
+    // Add offer-type to each flight offer
+    data.data.forEach((flight) => {
+      if (flight === cheapestFlight) {
+        flight["offer-type"] = "Cheapest";
+      } else if (flight === fastestFlight) {
+        flight["offer-type"] = "Fastest";
+      } else {
+        flight["offer-type"] = "normal";
+      }
+    });
+    const airlineCodes = Array.from(
+      new Set(
+        data.data.flatMap((offer) =>
+          offer.itineraries.flatMap((itinerary) =>
+            itinerary.segments.map((segment) => segment.carrierCode)
           )
         )
-      );
-  
-      // Get airline logo
-      const airlineLogoUrls = await Promise.all(
-        airlineCodes.map(async (code) => {
-          const logoResponse = await fetch(
-            `https://content.airhex.com/content/logos/airlines_${code}_50_50_s.png?apikey=${process.env.YOUR_API_KEY}`
+      )
+    );
+
+    // Get airline logo
+    const airlineLogoUrls = await Promise.all(
+      airlineCodes.map(async (code) => {
+        const logoResponse = await fetch(
+          `https://content.airhex.com/content/logos/airlines_${code}_50_50_s.png?apikey=${process.env.YOUR_API_KEY}`
+        );
+        return { code, logoUrl: logoResponse.url };
+      })
+    );
+
+    data.data.forEach((flight) => {
+      flight.itineraries.forEach((itinerary) => {
+        itinerary.segments.forEach((segment) => {
+          const logoObj = airlineLogoUrls.find(
+            (logo) => logo.code === segment.carrierCode
           );
-          return { code, logoUrl: logoResponse.url };
-        })
-      );
-  
-      data.data.forEach((flight) => {
-        flight.itineraries.forEach((itinerary) => {
-          itinerary.segments.forEach((segment) => {
-            const logoObj = airlineLogoUrls.find(
-              (logo) => logo.code === segment.carrierCode
-            );
-            segment.airlineLogo = logoObj ? logoObj.logoUrl : "";
-          });
+          segment.airlineLogo = logoObj ? logoObj.logoUrl : "";
         });
       });
-  
-     // Replace location codes with city and country names
-     Object.entries(data.dictionaries.locations).forEach(([code, location]) => {
+    });
+
+    // Replace location codes with city and country names
+    Object.entries(data.dictionaries.locations).forEach(([code, location]) => {
       location.cityName = location.cityCode;
       location.countryName = getCountryName(location.countryCode);
     });
@@ -181,10 +181,10 @@ const searchFlights = async (req, res) => {
     console.error("Error:", err);
     res.status(500).json({ message: "Error searching for flights", error: err.message });
   }
-  };
-  
-  module.exports = {
-    searchFlights,
-  };
+};
+
+module.exports = {
+  searchFlights,
+};
 
 
