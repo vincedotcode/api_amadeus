@@ -81,9 +81,13 @@ const searchFlights = async (req, res) => {
       returnDate: returnDate !== null ? returnDate : undefined,
       adults: query.adults,
       nonStop: query.nonStop,
+      max: 150,
     });
-
     const data = JSON.parse(response.body);
+    if (!data.data || data.data.length === 0) {
+      res.status(404).json({ message: "No flights available for the current search" });
+      return;
+    }
 
     let cheapestFlight = data.data[0];
     let fastestFlight = data.data[0];

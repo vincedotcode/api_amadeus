@@ -34,7 +34,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'https://amadeus-api-6a8h.onrender.com',
+          url: 'http://localhost:5000',
         },
       ],
     },
