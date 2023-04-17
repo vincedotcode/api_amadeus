@@ -3,12 +3,16 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const { searchCity } = require('./controllers/cityController');
 const { searchFlights } = require('./controllers/flightController');
+const {searchPrice} = require('./controllers/priceController');
+const {createBooking} = require("./controllers/bookingController");
+
+
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
 
 const app = express();
-const allowedOrigins = ['http://localhost:3000', 'https://amadeus-api-6a8h.onrender.com', 'https://gotreep.netlify.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://amadeus-api-6a8h.onrender.com', 'https://gotreep.netlify.app', 'http://localhost:5000'];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
@@ -34,7 +38,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'http://localhost:5000',
+          url: 'https://amadeus-api-6a8h.onrender.com',
         },
       ],
     },
@@ -47,6 +51,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes
 app.get('/cities', searchCity);
 app.get('/flights', searchFlights);
+app.post('/price', searchPrice);
+app.post('/booking', createBooking);
 
 
 // Start the server

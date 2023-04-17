@@ -81,7 +81,7 @@ const searchFlights = async (req, res) => {
       returnDate: returnDate !== null ? returnDate : undefined,
       adults: query.adults,
       nonStop: query.nonStop,
-      max: 150,
+      max: 250,
     });
     const data = JSON.parse(response.body);
     if (!data.data || data.data.length === 0) {

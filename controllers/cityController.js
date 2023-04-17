@@ -39,26 +39,26 @@ const amadeus = require("../amadeusClient");
 
 
 const searchCity = async (req, res) => {
-    const { query } = req;
-  
-    console.log("Query:", query);
-  
-    try {
-      const response = await amadeus.referenceData.locations.get({
-        keyword: query.keyword,
-        subType: "CITY,AIRPORT",
-      });
-  
-      res.status(200).json(response.result);
-    } catch (error) {
-      console.error("Amadeus API error:", error);
-      res
-        .status(500)
-        .json({ message: "Error searching for city", error: error.message });
-    }
-  };
-  
-  
-  module.exports = {
-    searchCity,
-  };
+  const { query } = req;
+
+  console.log("Query:", query);
+
+  try {
+    const response = await amadeus.referenceData.locations.get({
+      keyword: query.keyword,
+      subType: "CITY,AIRPORT",
+    });
+
+    res.status(200).json(response.result);
+  } catch (error) {
+    console.error("Amadeus API error:", error);
+    res
+      .status(500)
+      .json({ message: "Error searching for city", error: error.message });
+  }
+};
+
+
+module.exports = {
+  searchCity,
+};
