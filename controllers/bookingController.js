@@ -27,22 +27,7 @@ const amadeus = require("../amadeusClient");
  *                 type: object
  *                 required: true
  *                 description: Flight offer object containing price information
- *               cardDetails:
- *                 type: object
- *                 required: true
- *                 description: Credit card information
- *               travelers:
- *                 type: array
- *                 required: true
- *                 description: Array of traveler objects
- *                 items:
- *                   type: object
- *               contacts:
- *                 type: array
- *                 required: true
- *                 description: Array of contacts objects
- *                 items:
- *                   type: object
+
  *     responses:
  *       200:
  *         description: Payment successful, booking confirmed
@@ -81,43 +66,13 @@ const amadeus = require("../amadeusClient");
 
 // ...
 
-async function confirmBooking(flightOffer, travelers, contacts) {
-  try {
-    const response = await amadeus.booking.flightOrders.post(
-      JSON.stringify({
-        data: {
-          type: "flight-order",
-          flightOffers: [flightOffer],
-          travelers: travelers,
-          remarks: {
-            general: [
-              {
-                subType: "GENERAL_MISCELLANEOUS",
-                text: "ONLINE BOOKING FROM INCREIBLE VIAJES",
-              },
-            ],
-          },
-          ticketingAgreement: {
-            option: "DELAY_TO_CANCEL",
-            delay: "6D",
-          },
-          contacts: contacts,
-        },
-      })
-    );
-    return response;
-  } catch (error) {
-    console.error("Error confirming booking:", error);
-    throw error;
-  }
-}
 
 
 
 const createBooking = async (req, res) => {
-  const { email, flightOffer, travelers, contacts } = req.body;
+  const { email, flightOffer } = req.body;
 
-  if (!email || !flightOffer || !travelers || !contacts) {
+  if (!email || !flightOffer) {
     res.status(400).json({ message: "Invalid input" });
     return;
   }
@@ -140,8 +95,8 @@ const createBooking = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:3000/checkout-page/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "https://your-domain.com/cancel",
+      success_url: "http://localhost:3000/checkout-page?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "http://localhost:3000/checkout-page?cancel",
     });
 
     res.status(200).json({ checkoutUrl: session.url });
