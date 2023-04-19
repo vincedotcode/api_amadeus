@@ -5,12 +5,15 @@ const { searchCity } = require('./controllers/cityController');
 const { searchFlights } = require('./controllers/flightController');
 const {searchPrice} = require('./controllers/priceController');
 const {createBooking} = require("./controllers/bookingController");
+const {confirmBooking} = require("./controllers/confirmController");
 
 
+
+///middleware constraints
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-
+///app constraints
 const app = express();
 const allowedOrigins = ['http://localhost:3000', 'https://amadeus-api-6a8h.onrender.com', 'https://gotreep.netlify.app', 'http://localhost:5000'];
 app.use(cors({
@@ -53,6 +56,7 @@ app.get('/cities', searchCity);
 app.get('/flights', searchFlights);
 app.post('/price', searchPrice);
 app.post('/booking', createBooking);
+app.post('/confirm', confirmBooking);
 
 
 // Start the server
