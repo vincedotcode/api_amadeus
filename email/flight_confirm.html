@@ -2458,7 +2458,7 @@
                                                                         font-size: 14px;
                                                                         mso-line-height-alt: 16.8px;
                                                                     ">
-                                                                <span style="font-size: 17px;">James Brown</span>
+                                                                <span style="font-size: 17px;"><%= bookingDetails.data.contacts[0].firstName %> <%= <%= bookingDetails.data.contacts[0].lastName %></span>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -2570,7 +2570,7 @@
                                                                         text-align: left;
                                                                         mso-line-height-alt: 21px;
                                                                     ">
-                                                                <span style="font-size: 14px;">$350</span>
+                                                                <span style="font-size: 14px;"><%=bookingDetails.data.flightOffers[0].price.currency%>  <%=bookingDetails.data.flightOffers[0].price.total%></span>
                                                             </p>
                                                         </div>
                                                     </div>
