@@ -47,40 +47,40 @@ const { Console } = require("console");
 
 // Set up email transporter
 const transporter = nodemailer.createTransport(smtpTransport({
-    host: "mail.smtp2go.com",
-    port: 587,
-    secure: false, // Use TLS
-    auth: {
-      user: "zapadmin",
-      pass: "AbrL6d5BBnHprJyY",
-    },
+  host: "mail.smtp2go.com",
+  port: 587,
+  secure: false, // Use TLS
+  auth: {
+    user: "zapadmin",
+    pass: "AbrL6d5BBnHprJyY",
+  },
 }));
-  const sendBookingEmail = async (contact, bookingDetails) => {
+const sendBookingEmail = async (contact, bookingDetails) => {
   const templatePath = './email/flight_confirm.html';
   const templateFile = fs.readFileSync(templatePath, 'utf-8');
-    // Compile the template with EJS
+  // Compile the template with EJS
   const emailContent = ejs.render(templateFile, { bookingDetails });
 
-    console.log(bookingDetails)
-  
-  
-  
-    const mailOptions = {
-      from: "poorundev@zapproach.com",
-      to: contact.emailAddress,
-      subject: "Booking Confirmation - GoTreep",
-      html: emailContent,
-    };
-  
+  console.log(emailContent)
 
-    console.log(contact.emailAddress)
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log("Email sent to", contact.emailAddress);
-    } catch (error) {
-      console.error("Error sending email:", error);
-    }
+
+
+  const mailOptions = {
+    from: "poorundev@zapproach.com",
+    to: contact.emailAddress,
+    subject: "Booking Confirmation - GoTreep",
+    html: emailContent,
   };
+
+
+  console.log(contact.emailAddress)
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent to", contact.emailAddress);
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+};
 
 const confirmBooking = async (req, res) => {
   const { flightOffer, travelerInfo, contacts } = req.body;
