@@ -61,7 +61,7 @@ const sendBookingEmail = async (contact, bookingDetails) => {
   // Compile the template with EJS
   const emailContent = ejs.render(templateFile, { bookingDetails });
 
-  console.log(emailContent)
+  console.log(bookingDetails)
 
 
 
