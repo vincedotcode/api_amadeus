@@ -4,7 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const { searchCity } = require('./controllers/cityController');
 const { searchFlights } = require('./controllers/flightController');
 const {searchPrice} = require('./controllers/priceController');
-const {createBooking} = require("./controllers/bookingController");
+const {createBooking, createEstBooking} = require("./controllers/bookingController");
 const {confirmBooking} = require("./controllers/confirmController");
 
 
@@ -56,6 +56,7 @@ app.get('/cities', searchCity);
 app.get('/flights', searchFlights);
 app.post('/price', searchPrice);
 app.post('/booking', createBooking);
+app.post('/estbooking', createEstBooking);
 app.post('/confirm', confirmBooking);
 
 
