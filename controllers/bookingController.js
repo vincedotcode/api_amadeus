@@ -94,8 +94,8 @@ const createBooking = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:3000/checkout-page?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:3000/checkout-page?cancel",
+      success_url: "https://gotreep.netlify.app/checkout-page?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://gotreep.netlify.app/checkout-page?cancel",
     });
 
     res.status(200).json({ checkoutUrl: session.url });
@@ -190,8 +190,8 @@ const createEstBooking = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:3000/confirm-payment?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:3000/checkout-page?cancel",
+      success_url: "https://gotreep.netlify.app/confirm-payment?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://gotreep.netlify.app/checkout-page?cancel",
     });
 
     res.status(200).json({ checkoutUrl: session.url });
